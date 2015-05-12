@@ -1,0 +1,68 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>cover/Elixir.Chordpro.Parser.html</title>
+</head><body style='background-color: white; color: black'>
+<pre>
+File generated from /Users/adam/projects/chordpro/lib/chordpro/parser.ex by COVER 2015-05-12 at 11:53:25
+
+****************************************************************************
+
+        |  defmodule Chordpro.Parser do
+        |  
+        |    def parse(chordpro_format) do
+        |      chordpro_format
+        |      |&gt; String.split("\n")
+        |      |&gt; Enum.map(&amp;parse_line/1)
+     8..|      |&gt; Enum.filter(&amp;elem(&amp;1, 1))
+        |    end
+        |  
+        |    defp parse_line(line) do
+        |      line
+        |      |&gt; String.strip
+    49..|      |&gt; categorize
+        |    end
+        |  
+        |    defp categorize(""),               do: {:empty, nil}
+        |    defp categorize("#" &lt;&gt; _),         do: {:comment, nil}
+        |    defp categorize("{t:" &lt;&gt; title),   do: {:title, cleanup_tagline(title)}
+        |    defp categorize("{st:" &lt;&gt; artist), do: {:artist, cleanup_tagline(artist)}
+        |    defp categorize("{" &lt;&gt; _),         do: {:unknown, nil}
+        |    defp categorize(line),             do: {:line, parse_chords(line)}
+        |  
+    12..|    defp cleanup_tagline(line), do: String.rstrip(line, ?})
+        |  
+        |    defp parse_chords("[" &lt;&gt; line) do
+        |      line
+        |      |&gt; String.split(~r/\[|\]/)
+   108..|      |&gt; Enum.reject(&amp;(String.length(&amp;1) == 0))
+        |      |&gt; Enum.chunk(2)
+    16..|      |&gt; split_line
+        |    end
+        |    defp parse_chords(line) do
+     3..|      parse_chords("[ ]" &lt;&gt; line)
+        |    end
+        |  
+        |    defp split_line(line) do
+    16..|      chords =
+        |        line
+        |        |&gt; Enum.map(&amp;space_chords/1)
+        |        |&gt; Enum.join
+        |        |&gt; String.rstrip
+    16..|      lyrics =
+        |        line
+        |        |&gt; Enum.map(&amp;get_lyrics/1)
+        |        |&gt; Enum.join
+        |      {chords, lyrics}
+        |    end
+        |  
+        |    defp space_chords([chord, lyric]) do
+    54..|      String.ljust(chord, String.length(lyric))
+        |    end
+        |  
+    54..|    defp get_lyrics([_, lyrics]), do: lyrics
+        |  end
+</pre>
+</body>
+</html>

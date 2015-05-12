@@ -1,0 +1,77 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>cover/Elixir.Chordpro.Cli.html</title>
+</head><body style='background-color: white; color: black'>
+<pre>
+File generated from /Users/adam/projects/chordpro/lib/chordpro/cli.ex by COVER 2015-05-12 at 11:53:25
+
+****************************************************************************
+
+        |  defmodule Chordpro.Cli do
+        |    use Application
+        |  
+        |    def start(_type, _args), do: {:ok, self}
+        |  
+        |    def main(args) do
+        |      args
+        |      |&gt; parse_args
+     6..|      |&gt; process_input
+        |    end
+        |  
+        |    defp parse_args(args) do
+        |      args
+        |      |&gt; OptionParser.parse
+     6..|      |&gt; case do
+        |        {[file: f], _, _}    -&gt; {:filename, f}
+        |        {_, _, [{"-f", f}]}  -&gt; {:filename, f}
+        |        {_, [f], _}          -&gt; {:filename, f}
+        |        {[help: true], _, _} -&gt; :help
+        |        {_, _, _}            -&gt; :unknown
+        |      end
+        |    end
+        |  
+        |    defp process_input({:filename, filename}) do
+        |      filename
+        |      |&gt; read_file
+     4..|      |&gt; process_file
+        |    end
+        |    defp process_input(:help) do
+        |      """
+        |      usage:
+        |        chordpro file
+        |        chordpro -f file
+        |        chordpro --file file
+        |      """
+     1..|      |&gt; IO.puts
+        |    end
+     1..|    defp process_input(:unknown), do: IO.puts "Unknown options, try --help"
+        |  
+        |    defp process_file({:error, reason}) do
+     1..|      IO.puts "There was an error opening your file:"
+     1..|      IO.puts reason
+        |    end
+        |    defp process_file(file) do
+        |      file
+        |      |&gt; Chordpro.Parser.parse
+        |      |&gt; Chordpro.Formatter.text
+     3..|      |&gt; IO.puts
+        |    end
+        |  
+        |    defp read_file(filename) do
+        |      filename
+        |      |&gt; Path.expand
+        |      |&gt; File.read
+     4..|      |&gt; case do
+     3..|        {:ok, text}       -&gt; text
+        |        {:error, :enoent} -&gt; {:error, "File not found"}
+        |        {:error, :eacces} -&gt; {:error, "Permission denied"}
+        |        {:error, :enomem} -&gt; {:error, "File too large"}
+        |        {:error, _}       -&gt; {:error, "Unknown error"}
+        |      end
+        |    end
+        |  end
+</pre>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>cover/Elixir.Chordpro.Formatter.html</title>
+</head><body style='background-color: white; color: black'>
+<pre>
+File generated from /Users/adam/projects/chordpro/lib/chordpro/formatter.ex by COVER 2015-05-12 at 11:53:25
+
+****************************************************************************
+
+        |  defmodule Chordpro.Formatter do
+        |    def text([]), do: ""
+        |    def text([{:title, title}, {:artist, artist} | rest]) do
+        |      [title, artist, "" | format_lines(rest)]
+     8..|      |&gt; Enum.join("\n")
+        |    end
+        |    def text([{:title, title} | rest]) do
+     1..|      text([{:title, title}, {:artist, "Unknown Artist"} | rest])
+        |    end
+        |    def text([{:artist, artist} | rest]) do
+     1..|      text([{:title, "Unknown Title"}, {:artist, artist} | rest])
+        |    end
+        |    def text([rest]) do
+     1..|      text([{:title, "Unknown Title"}, {:artist, "Unknown Artist"} | rest])
+        |    end
+        |  
+        |    defp format_lines({:line, line}), do: [format_line({:line, line})]
+     7..|    defp format_lines(lines), do: Enum.map(lines, &amp;format_line/1)
+        |  
+        |    defp format_line({:line, {chords, lyrics}}) do
+    16..|      Enum.join([chords, lyrics], "\n")
+        |    end
+        |  end
+</pre>
+</body>
+</html>
